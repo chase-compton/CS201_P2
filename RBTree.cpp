@@ -2,6 +2,24 @@
 
 using namespace std;
 
+template <class typeOne, class typeTwo>
+class Node
+{
+    typeOne key;
+    typeTwo value;
+    int color;
+    Node left;
+    Node right;
+    Node parent;
+
+public:
+    
+    void print()
+    {
+        cout << "Key: " << key << " Value: " << value << " Color: " << color << endl;
+    }
+};
+
 template <class type>
 class CircularDynamicArray
 {
