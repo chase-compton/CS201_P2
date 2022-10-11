@@ -23,13 +23,71 @@ public:
         right = nullptr;
         parent = nullptr;
     }
+
+    Node(typeOne k, typeTwo v, int c, Node *l, Node *r, Node *p)
+    {
+        key = k;
+        value = v;
+        color = c;
+        left = l;
+        right = r;
+        parent = p;
+    }
+
+    Node(const Node &rhs)
+    {
+        key = rhs.key;
+        value = rhs.value;
+        color = rhs.color;
+        left = rhs.left;
+        right = rhs.right;
+        parent = rhs.parent;
+        cout<<"yo"<<endl;
+    }
+
+    Node &operator=(const Node &rhs)
+    {
+        key = rhs.key;
+        value = rhs.value;
+        color = rhs.color;
+        left = rhs.left;
+        right = rhs.right;
+        parent = rhs.parent;
+        return *this;
+    }
+
+    ~Node()
+    {
+        cout << "Deleted" << endl;
+    }
+
     void print()
     {
         cout << "Key: " << key << " Value: " << value << " Color: " << color << endl;
     }
 };
 
-int main(){
-    Node 
+template <class typeOne, class typeTwo>
+class RBTree
+{
+protected:
+    Node<typeOne, typeTwo> root;
+    Node<int, int> nil;
 
-}
+public:
+    RBTree()
+    {
+        nil = Node<int, int>(0, 0, 0, nullptr, nullptr, nullptr);
+        // root = nil;
+        // nil.print();
+        // root.print();
+    }
+};
+
+int main()
+{
+    Node<int, string> test;
+    test.print();
+    Node test2 = test;
+    test2.print();
+};
