@@ -64,11 +64,6 @@ public:
 
         size = 0;
     }
-
-    void print()
-    {
-        cout << "Key: " << key << " Value: " << value << " Color: " << color << " Items: " << size << endl;
-    }
 };
 
 template <class keyType, class valueType>
@@ -88,7 +83,7 @@ public:
     {
         nil = new Node<keyType, valueType>();
         root = nil;
-        
+
         for (int i = 0; i < s; i++)
         {
             insert(k[i], v[i]);
