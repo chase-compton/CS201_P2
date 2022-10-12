@@ -1,5 +1,6 @@
 #include <iostream>
-
+#define black false
+#define red true
 using namespace std;
 
 template <class keyType, class valueType>
@@ -15,11 +16,11 @@ public:
 
     bool color;
 
-    int itemsLeft;
+    int size;
 
     Node()
     {
-        color = true;
+        color = black;
     }
 
     Node(keyType k, valueType v)
@@ -31,9 +32,9 @@ public:
         right = nullptr;
         parent = nullptr;
 
-        color = false;
+        color = red;
 
-        itemsLeft = 0;
+        size = 0;
     }
 
     Node(keyType k, valueType v, bool c)
@@ -47,12 +48,26 @@ public:
 
         color = c;
 
-        itemsLeft = 0;
+        size = 0;
+    }
+
+    Node(keyType k, valueType v, bool c, Node<keyType, valueType> *l, Node<keyType, valueType> *r, Node<keyType, valueType> *p)
+    {
+        key = k;
+        value = v;
+
+        left = l;
+        right = r;
+        parent = p;
+
+        color = c;
+
+        size = 0;
     }
 
     void print()
     {
-        cout << "Key: " << key << " Value: " << value << " Color: " << color << " Items: " << itemsLeft << endl;
+        cout << "Key: " << key << " Value: " << value << " Color: " << color << " Items: " << size << endl;
     }
 };
 
@@ -61,23 +76,27 @@ class RBTree
 {
 public:
     Node<keyType, valueType> *root;
-
-    int size;
+    Node<keyType, valueType> *nil;
 
     RBTree()
     {
-        root = new Node<keyType, valueType>();
-        size = 0;
+        nil = new Node<keyType, valueType>();
+        root = nil;
     }
 
     RBTree(keyType k[], valueType v[], int s)
     {
-        // gonna loop through and insert one by one
+        nil = new Node<keyType, valueType>();
+        root = nil;
+        
+        for (int i = 0; i < s; i++)
+        {
+            insert(k[i], v[i]);
+        }
     }
 
     RBTree(const RBTree &rhs)
     {
-
     }
 
     RBTree &operator=(const RBTree &rhs)
@@ -92,75 +111,211 @@ public:
 
     valueType *search(keyType k)
     {
-
     }
 
     void insert(keyType k, valueType v)
     {
+        Node<keyType, valueType> *z = new Node<keyType, valueType>(k, v);
+        Node<keyType, valueType> *y = nil;
+        Node<keyType, valueType> *x = root;
 
+        while (x != nil)
+        {
+            y = x;
+            if (z->key < x->key)
+            {
+                x = x->left;
+            }
+            else
+            {
+                x = x->right;
+            }
+        }
+        z->parent = y;
+        if (y == nil)
+        {
+            root = z;
+        }
+        else if (z->key < y->key)
+        {
+            y->left = z;
+        }
+        else
+        {
+            y->right = z;
+        }
+        z->left = nil;
+        z->right = nil;
+        insertFixUp(z);
+    }
+
+    void insertFixUp(Node<keyType, valueType> *z)
+    {
+        while (z->parent->color == red)
+        {
+            if (z->parent == z->parent->parent->left)
+            {
+                Node<keyType, valueType> *y = z->parent->parent->right;
+                if (y->color == red)
+                {
+                    z->parent->color = black;
+                    y->color = black;
+                    z->parent->parent->color = red;
+                    z = z->parent->parent;
+                    continue;
+                }
+                else if (z == z->parent->right)
+                {
+                    z = z->parent;
+                    leftRotate(z);
+                }
+                z->parent->color = black;
+                z->parent->parent->color = red;
+                rightRotate(z->parent->parent);
+            }
+            else
+            {
+                Node<keyType, valueType> *y = z->parent->parent->left;
+                if (y->color == red)
+                {
+                    z->parent->color = black;
+                    y->color = black;
+                    z->parent->parent->color = red;
+                    z = z->parent->parent;
+                    continue;
+                }
+                else if (z == z->parent->left)
+                {
+                    z = z->parent;
+                    rightRotate(z);
+                }
+                z->parent->color = black;
+                z->parent->parent->color = red;
+                leftRotate(z->parent->parent);
+            }
+        }
+        root->color = black;
+    }
+
+    void leftRotate(Node<keyType, valueType> *x)
+    {
+        Node<keyType, valueType> *y = x->right;
+        x->right = y->left;
+
+        if (y->left != nil)
+        {
+            y->left->parent = x;
+        }
+        y->parent = x->parent;
+        if (x->parent == nil)
+        {
+            root = y;
+        }
+        else if (x == x->parent->left)
+        {
+            x->parent->left = y;
+        }
+        else
+        {
+            x->parent->right = y;
+        }
+        y->left = x;
+        x->parent = y;
+    }
+
+    void rightRotate(Node<keyType, valueType> *x)
+    {
+        Node<keyType, valueType> *y = x->left;
+        x->left = y->right;
+
+        if (y->right != nil)
+        {
+            y->right->parent = x;
+        }
+        y->parent = x->parent;
+        if (x->parent == nil)
+        {
+            root = y;
+        }
+        else if (x == x->parent->right)
+        {
+            x->parent->right = y;
+        }
+        else
+        {
+            x->parent->left = y;
+        }
+        y->right = x;
+        x->parent = y;
     }
 
     int remove(keyType k)
     {
-
     }
 
     int rank(keyType k)
     {
-
     }
 
     keyType select(int pos)
     {
-
     }
 
     keyType *predecessor(keyType k)
     {
-
     }
 
     int size()
     {
-
+        return root->size;
     }
 
     void preorder()
     {
+        preorderHelper(root);
+        cout << endl;
+    }
 
+    void preorderHelper(Node<keyType, valueType> *node)
+    {
+        if (node == nil)
+            return;
+        cout << node->key << " ";
+        preorderHelper(node->left);
+        preorderHelper(node->right);
     }
 
     void inorder()
     {
+        inorderHelper(root);
+        cout << endl;
+    }
 
+    void inorderHelper(Node<keyType, valueType> *node)
+    {
+        if (node == nil)
+            return;
+        inorderHelper(node->left);
+        cout << node->key << " ";
+        inorderHelper(node->right);
     }
 
     void postorder()
     {
+        postorderHelper(root);
+        cout << endl;
+    }
 
+    void postorderHelper(Node<keyType, valueType> *node)
+    {
+        if (node == nil)
+            return;
+        postorderHelper(node->left);
+        postorderHelper(node->right);
+        cout << node->key << " ";
     }
 
     void print(int k)
     {
-
     }
-
-
-
-
-
-};
-
-int main()
-{
-    Node<int, int> test;
-    test.print();
-    Node<int, int> test2(1, 2);
-    test2.print();
-    Node<int, int> test3(3, 4, true);
-    test3.print();
-    test.left = &test2;
-    test.left->print();
-    RBTree<int, int> treeTest;
-    treeTest.root->print();
 };
