@@ -2,92 +2,165 @@
 
 using namespace std;
 
-template <class typeOne, class typeTwo>
+template <class keyType, class valueType>
 class Node
 {
-protected:
-    typeOne key;
-    typeTwo value;
-    int color;
-    Node *left;
-    Node *right;
-    Node *parent;
-
 public:
+    keyType key;
+    valueType value;
+
+    Node<keyType, valueType> *left;
+    Node<keyType, valueType> *right;
+    Node<keyType, valueType> *parent;
+
+    bool color;
+
+    int itemsLeft;
+
     Node()
     {
-        key = 1;
-        value = "Default Node";
-        color = 1;
-        left = nullptr;
-        right = nullptr;
-        parent = nullptr;
+        color = true;
     }
 
-    Node(typeOne k, typeTwo v, int c, Node *l, Node *r, Node *p)
+    Node(keyType k, valueType v)
     {
         key = k;
         value = v;
+
+        left = nullptr;
+        right = nullptr;
+        parent = nullptr;
+
+        color = false;
+
+        itemsLeft = 0;
+    }
+
+    Node(keyType k, valueType v, bool c)
+    {
+        key = k;
+        value = v;
+
+        left = nullptr;
+        right = nullptr;
+        parent = nullptr;
+
         color = c;
-        left = l;
-        right = r;
-        parent = p;
-    }
 
-    Node(const Node &rhs)
-    {
-        key = rhs.key;
-        value = rhs.value;
-        color = rhs.color;
-        left = rhs.left;
-        right = rhs.right;
-        parent = rhs.parent;
-        cout<<"yo"<<endl;
-    }
-
-    Node &operator=(const Node &rhs)
-    {
-        key = rhs.key;
-        value = rhs.value;
-        color = rhs.color;
-        left = rhs.left;
-        right = rhs.right;
-        parent = rhs.parent;
-        return *this;
-    }
-
-    ~Node()
-    {
-        cout << "Deleted" << endl;
+        itemsLeft = 0;
     }
 
     void print()
     {
-        cout << "Key: " << key << " Value: " << value << " Color: " << color << endl;
+        cout << "Key: " << key << " Value: " << value << " Color: " << color << " Items: " << itemsLeft << endl;
     }
 };
 
-template <class typeOne, class typeTwo>
+template <class keyType, class valueType>
 class RBTree
 {
-protected:
-    Node<typeOne, typeTwo> root;
-    Node<int, int> nil;
-
 public:
+    Node<keyType, valueType> *root;
+
+    int size;
+
     RBTree()
     {
-        nil = Node<int, int>(0, 0, 0, nullptr, nullptr, nullptr);
-        // root = nil;
-        // nil.print();
-        // root.print();
+        root = new Node<keyType, valueType>();
+        size = 0;
     }
+
+    RBTree(keyType k[], valueType v[], int s)
+    {
+        // gonna loop through and insert one by one
+    }
+
+    RBTree(const RBTree &rhs)
+    {
+
+    }
+
+    RBTree &operator=(const RBTree &rhs)
+    {
+        return *this;
+    }
+
+    ~RBTree()
+    {
+        delete root;
+    }
+
+    valueType *search(keyType k)
+    {
+
+    }
+
+    void insert(keyType k, valueType v)
+    {
+
+    }
+
+    int remove(keyType k)
+    {
+
+    }
+
+    int rank(keyType k)
+    {
+
+    }
+
+    keyType select(int pos)
+    {
+
+    }
+
+    keyType *predecessor(keyType k)
+    {
+
+    }
+
+    int size()
+    {
+
+    }
+
+    void preorder()
+    {
+
+    }
+
+    void inorder()
+    {
+
+    }
+
+    void postorder()
+    {
+
+    }
+
+    void print(int k)
+    {
+
+    }
+
+
+
+
+
 };
 
 int main()
 {
-    Node<int, string> test;
+    Node<int, int> test;
     test.print();
-    Node test2 = test;
+    Node<int, int> test2(1, 2);
     test2.print();
+    Node<int, int> test3(3, 4, true);
+    test3.print();
+    test.left = &test2;
+    test.left->print();
+    RBTree<int, int> treeTest;
+    treeTest.root->print();
 };
