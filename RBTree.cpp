@@ -21,6 +21,7 @@ public:
     Node()
     {
         color = black;
+        size = 0;
     }
 
     Node(keyType k, valueType v)
@@ -34,7 +35,7 @@ public:
 
         color = red;
 
-        size = 0;
+        size = 1;
     }
 
     Node(keyType k, valueType v, bool c)
@@ -48,10 +49,10 @@ public:
 
         color = c;
 
-        size = 0;
+        size = 1;
     }
 
-    Node(keyType k, valueType v, bool c, Node<keyType, valueType> *l, Node<keyType, valueType> *r, Node<keyType, valueType> *p)
+    Node(keyType k, valueType v, bool c, Node<keyType, valueType> *l, Node<keyType, valueType> *r, Node<keyType, valueType> *p, int s)
     {
         key = k;
         value = v;
@@ -62,7 +63,7 @@ public:
 
         color = c;
 
-        size = 0;
+        size = s;
     }
 };
 
@@ -92,20 +93,44 @@ public:
 
     RBTree(const RBTree &rhs)
     {
+        // same as assignment
     }
 
     RBTree &operator=(const RBTree &rhs)
     {
+        // idk maybe traversal copy
         return *this;
     }
 
     ~RBTree()
     {
+        // maybe delete through a traversal
         delete root;
     }
 
     valueType *search(keyType k)
     {
+        return &(nodeSearch(root, k)->value);
+    }
+
+    Node<keyType, valueType> *nodeSearch(Node<keyType, valueType> *node, keyType k)
+    {
+        if (node == nil)
+        {
+            return nullptr;
+        }
+        if (node->key == k)
+        {
+            return node;
+        }
+        if (node->key > k)
+        {
+            return nodeSearch(node->left, k);
+        }
+        else
+        {
+            return nodeSearch(node->right, k);
+        }
     }
 
     void insert(keyType k, valueType v)
@@ -116,6 +141,7 @@ public:
 
         while (x != nil)
         {
+            x->size++;
             y = x;
             if (z->key < x->key)
             {
@@ -216,6 +242,9 @@ public:
         }
         y->left = x;
         x->parent = y;
+
+        y->size = x->size;
+        x->size = x->left->size + x->right->size + 1;
     }
 
     void rightRotate(Node<keyType, valueType> *x)
@@ -242,22 +271,137 @@ public:
         }
         y->right = x;
         x->parent = y;
+
+        y->size = x->size;
+        x->size = x->left->size + x->right->size + 1;
     }
 
     int remove(keyType k)
     {
+        // Node<keyType, valueType> *z (k, nil->value);
+        // Node<keyType, valueType> *y = z;
+    }
+
+    void transplant(Node<keyType, valueType> *u, Node<keyType, valueType> *v)
+    {
+        if (u->parent == nil)
+        {
+            root = v;
+        }
+        else if (u == u->parent->left)
+        {
+            u->parent->left = v;
+        }
+        else
+        {
+            u->parent->right = v;
+        }
+        v->parent = u->parent;
     }
 
     int rank(keyType k)
     {
+        return rankHelper(nodeSearch(root, k), k);
+    }
+
+    int rankHelper(Node<keyType, valueType> *node, keyType k)
+    {
+        int r = node->left->size + 1;
+        Node<keyType, valueType> *y = node;
+
+        while (y != root)
+        {
+            if (y == y->parent->right)
+            {
+                r = r + y->parent->left->size + 1;
+            }
+            y = y->parent;
+        }
+        return r;
     }
 
     keyType select(int pos)
     {
+        return selectHelper(root, pos);
+    }
+
+    keyType selectHelper(Node<keyType, valueType> *node, int pos)
+    {
+        int r = node->left->size + 1;
+
+        if (pos == r)
+        {
+            return node->key;
+        }
+        else if (pos < r)
+        {
+            return selectHelper(node->left, pos);
+        }
+        return selectHelper(node->right, pos - r);
+    }
+
+    keyType *successor(keyType k)
+    {
+        Node<keyType, valueType> *node = nodeSearch(root, k);
+
+        if (node->right != nil)
+        {
+            return &(minimum(node->right)->key);
+        }
+        
+        Node<keyType, valueType> *y = node->parent;
+
+        while (y != nil && node == y->right)
+        {
+            node = y;
+            y = y->parent;
+        }
+        if (y == nil)
+        {
+            return nullptr;
+        }
+        return &(y->key);
     }
 
     keyType *predecessor(keyType k)
     {
+        Node<keyType, valueType> *node = nodeSearch(root, k);
+
+        if (node->left != nil)
+        {
+            return &(maximum(node->left)->key);
+        }
+        
+        Node<keyType, valueType> *y = node->parent;
+
+        while (y != nil && node == y->left)
+        {
+            node = y;
+            y = y->parent;
+        }
+        if (y == nil)
+        {
+            return nullptr;
+        }
+        return &(y->key);
+    }
+
+    Node<keyType, valueType> *minimum(Node<keyType, valueType> *node)
+    {
+        while (node->left != nil)
+        {
+            node = node->left;
+        }
+        return node;
+    }
+
+    Node<keyType, valueType> *maximum(Node<keyType, valueType> *node)
+    {
+        while (node->right != nil)
+        {
+            node = node->right;
+        }
+        return node;
     }
 
     int size()
@@ -311,6 +455,10 @@ public:
     }
 
     void print(int k)
+    {
+    }
+
+    void printHelper(Node<keyType, valueType> *node, int k)
     {
     }
 };
