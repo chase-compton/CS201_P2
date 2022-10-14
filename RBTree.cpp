@@ -278,8 +278,53 @@ public:
 
     int remove(keyType k)
     {
-        // Node<keyType, valueType> *z (k, nil->value);
-        // Node<keyType, valueType> *y = z;
+        Node<keyType, valueType> *z = nodeSearch(root, k);
+
+        if (z == nullptr)
+        {
+            return 0;
+        }
+
+        Node<keyType, valueType> *x = nil;
+        Node<keyType, valueType> *y = z;
+        bool y_original_color = y->color;
+
+        if (z->left == nil)
+        {
+            x = z->right;
+            transplant(z, z->right);
+        }
+        else if (z->right == nil)
+        {
+            x = z->left;
+            transplant(z, z->left);
+        }
+        else
+        {
+            y = minimum(z->right);
+            y_original_color = y->color;
+            x = y->right;
+
+            if (y->parent == z)
+            {
+                x->parent = y;
+            }
+            else
+            {
+                transplant(y, y->right);
+                y->right = z->right;
+                y->right->parent = y;
+            }
+            transplant(z, y);
+            y->left = z->left;
+            y->left->parent = y;
+            y->color = z->color;
+        }
+        if (y_original_color == black)
+        {
+            deleteFixUp(x);
+        }
+        return 1;
     }
 
     void transplant(Node<keyType, valueType> *u, Node<keyType, valueType> *v)
@@ -299,9 +344,80 @@ public:
         v->parent = u->parent;
     }
 
+    void deleteFixUp(Node<keyType, valueType> *x)
+    {
+        while (x != root && x->color == black)
+        {
+            if (x == x->parent->left)
+            {
+                Node<keyType, valueType> *w = x->parent->right;
+                if (w->color == red)
+                {
+                    w->color = black;
+                    x->parent->color = red;
+                    leftRotate(x->parent);
+                    w = x->parent->right;
+                }
+                if (w->left->color == black and w->right->color == black)
+                {
+                    w->color = red;
+                    x = x->parent;
+                    continue;
+                }
+                else if (w->right->color == black)
+                {
+                    w->left->color = black;
+                    w->color = red;
+                    rightRotate(w);
+                    w = x->parent->right;
+                }
+                w->color = x->parent->color;
+                x->parent->color = black;
+                w->right->color = black;
+                leftRotate(x->parent);
+                x = root;
+            }
+            else
+            {
+                Node<keyType, valueType> *w = x->parent->left;
+                if (w->color == red)
+                {
+                    w->color = black;
+                    x->parent->color = red;
+                    rightRotate(x->parent);
+                    w = x->parent->left;
+                }
+                if (w->right->color == black and w->left->color == black)
+                {
+                    w->color = red;
+                    x = x->parent;
+                    continue;
+                }
+                else if (w->left->color == black)
+                {
+                    w->right->color = black;
+                    w->color = red;
+                    leftRotate(w);
+                    w = x->parent->left;
+                }
+                w->color = x->parent->color;
+                x->parent->color = black;
+                w->left->color = black;
+                rightRotate(x->parent);
+                x = root;
+            }
+        }
+        x->color = black;
+    }
+
     int rank(keyType k)
     {
-        return rankHelper(nodeSearch(root, k), k);
+        Node<keyType, valueType> *node = nodeSearch(root, k);
+        if (node == nullptr)
+        {
+            return 0;
+        }
+        return rankHelper(node, k);
     }
 
     int rankHelper(Node<keyType, valueType> *node, keyType k)
@@ -348,7 +464,7 @@ public:
         {
             return &(minimum(node->right)->key);
         }
-        
+
         Node<keyType, valueType> *y = node->parent;
 
         while (y != nil && node == y->right)
@@ -371,7 +487,7 @@ public:
         {
             return &(maximum(node->left)->key);
         }
-        
+
         Node<keyType, valueType> *y = node->parent;
 
         while (y != nil && node == y->left)
