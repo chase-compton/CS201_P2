@@ -183,16 +183,18 @@ public:
                     y->color = black;
                     z->parent->parent->color = red;
                     z = z->parent->parent;
-                    continue;
                 }
-                else if (z == z->parent->right)
+                else 
                 {
-                    z = z->parent;
-                    leftRotate(z);
+                    if (z == z->parent->right)
+                    {
+                        z = z->parent;
+                        leftRotate(z);
+                    }
+                    z->parent->color = black;
+                    z->parent->parent->color = red;
+                    rightRotate(z->parent->parent);
                 }
-                z->parent->color = black;
-                z->parent->parent->color = red;
-                rightRotate(z->parent->parent);
             }
             else
             {
@@ -205,14 +207,17 @@ public:
                     z = z->parent->parent;
                     continue;
                 }
-                else if (z == z->parent->left)
+                else 
                 {
-                    z = z->parent;
-                    rightRotate(z);
+                    if (z == z->parent->left)
+                    {
+                        z = z->parent;
+                        rightRotate(z);
+                    }
+                    z->parent->color = black;
+                    z->parent->parent->color = red;
+                    leftRotate(z->parent->parent);
                 }
-                z->parent->color = black;
-                z->parent->parent->color = red;
-                leftRotate(z->parent->parent);
             }
         }
         root->color = black;
@@ -245,6 +250,7 @@ public:
 
         y->size = x->size;
         x->size = x->left->size + x->right->size + 1;
+
     }
 
     void rightRotate(Node<keyType, valueType> *x)
@@ -273,7 +279,7 @@ public:
         x->parent = y;
 
         y->size = x->size;
-        x->size = x->left->size + x->right->size + 1;
+        x->size = x->right->size + x->left->size + 1;
     }
 
     int remove(keyType k)
@@ -289,21 +295,21 @@ public:
         Node<keyType, valueType> *y = z;
         bool y_original_color = y->color;
 
-        if (z->left == nil)
-        {
-            x = z->right;
-            transplant(z, z->right);
-        }
-        else if (z->right == nil)
+        if (z->right == nil)
         {
             x = z->left;
             transplant(z, z->left);
         }
+        else if (z->left == nil)
+        {
+            x = z->right;
+            transplant(z, z->right);
+        }
         else
         {
-            y = minimum(z->right);
+            y = maximum(z->left, true);
             y_original_color = y->color;
-            x = y->right;
+            x = y->left;
 
             if (y->parent == z)
             {
@@ -311,19 +317,20 @@ public:
             }
             else
             {
-                transplant(y, y->right);
-                y->right = z->right;
-                y->right->parent = y;
+                transplant(y, y->left);
+                y->left = z->left;
+                y->left->parent = y;
             }
             transplant(z, y);
-            y->left = z->left;
-            y->left->parent = y;
+            y->right = z->right;
+            y->right->parent = y;
             y->color = z->color;
         }
         if (y_original_color == black)
         {
             deleteFixUp(x);
         }
+        root->size = root->left->size + root->right->size + 1;
         return 1;
     }
 
@@ -358,24 +365,26 @@ public:
                     leftRotate(x->parent);
                     w = x->parent->right;
                 }
-                if (w->left->color == black and w->right->color == black)
+                if (w->left->color == black && w->right->color == black)
                 {
                     w->color = red;
                     x = x->parent;
-                    continue;
                 }
-                else if (w->right->color == black)
+                else
                 {
-                    w->left->color = black;
-                    w->color = red;
-                    rightRotate(w);
-                    w = x->parent->right;
+                    if (w->right->color == black)
+                    {
+                        w->left->color = black;
+                        w->color = red;
+                        rightRotate(w);
+                        w = x->parent->right;
+                    }
+                    w->color = x->parent->color;
+                    x->parent->color = black;
+                    w->right->color = black;
+                    leftRotate(x->parent);
+                    x = root;
                 }
-                w->color = x->parent->color;
-                x->parent->color = black;
-                w->right->color = black;
-                leftRotate(x->parent);
-                x = root;
             }
             else
             {
@@ -387,24 +396,26 @@ public:
                     rightRotate(x->parent);
                     w = x->parent->left;
                 }
-                if (w->right->color == black and w->left->color == black)
+                if (w->right->color == black && w->left->color == black)
                 {
                     w->color = red;
                     x = x->parent;
-                    continue;
                 }
-                else if (w->left->color == black)
+                else 
                 {
-                    w->right->color = black;
-                    w->color = red;
-                    leftRotate(w);
-                    w = x->parent->left;
+                    if (w->left->color == black)
+                    {
+                        w->right->color = black;
+                        w->color = red;
+                        leftRotate(w);
+                        w = x->parent->left;
+                    }
+                    w->color = x->parent->color;
+                    x->parent->color = black;
+                    w->left->color = black;
+                    rightRotate(x->parent);
+                    x = root;
                 }
-                w->color = x->parent->color;
-                x->parent->color = black;
-                w->left->color = black;
-                rightRotate(x->parent);
-                x = root;
             }
         }
         x->color = black;
@@ -472,9 +483,9 @@ public:
             node = y;
             y = y->parent;
         }
-        if (y == nil)
+        if (node == nil)
         {
-            return nullptr;
+            return NULL;
         }
         return &(y->key);
     }
@@ -485,7 +496,7 @@ public:
 
         if (node->left != nil)
         {
-            return &(maximum(node->left)->key);
+            return &(maximum(node->left, false)->key);
         }
 
         Node<keyType, valueType> *y = node->parent;
@@ -495,9 +506,9 @@ public:
             node = y;
             y = y->parent;
         }
-        if (y == nil)
+        if (node == nil)
         {
-            return nullptr;
+            return NULL;
         }
         return &(y->key);
     }
@@ -511,12 +522,15 @@ public:
         return node;
     }
 
-    Node<keyType, valueType> *maximum(Node<keyType, valueType> *node)
+    Node<keyType, valueType> *maximum(Node<keyType, valueType> *node, bool del)
     {
         while (node->right != nil)
         {
+            if (del)
+                node->size--;
             node = node->right;
         }
+        node->size--;
         return node;
     }
 
@@ -571,10 +585,6 @@ public:
     }
 
     void print(int k)
-    {
-    }
-
-    void printHelper(Node<keyType, valueType> *node, int k)
     {
     }
 };
