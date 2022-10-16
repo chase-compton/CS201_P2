@@ -4,8 +4,8 @@ using namespace std;
 
 int main()
 {
-
 	RBTree<int, int> X;
+	RBTree<int, int> Y = X;
 
 	for (int i = 1; i < 30; i++)
 	{
@@ -16,19 +16,18 @@ int main()
 			cout << "Select error" << endl;
 		if (*(X.search(i)) != i)
 			cout << "Search error" << endl;
+        cout << "---" << endl;
+		Y.insert(i, i);
+		if (Y.rank(i) != i)
+			cout << "Rank error" << endl;
+		if (Y.select(i) != i)
+			cout << "Select error" << endl;
+		if (*(Y.search(i)) != i)
+			cout << "Search error" << endl;
+        cout << i << endl;
 	}
 
-	RBTree<int, int> Y = X;
-
-
-	cout << "X " << X.nil << "|" << X.root << endl;
-    cout << "Y " << Y.nil << "|" << Y.root << endl;
-    cout << "Y " << Y.nil << "|" << Y.root->parent << endl;
-    cout << "Y " << Y.nil << "|" << Y.root->left->left->left->left << endl;
-    cout << "Y " << Y.nil << "|" << Y.root->right->right->right->right->right->right->right << endl;
-
-
-	X.preorder();
+    X.preorder();
 	X.inorder();
 	X.printk(X.size());
 	for (int i = 1; i < 30; i++)
@@ -218,4 +217,8 @@ int main()
 
 	return 0;
 
+    cout << "X " << X.nil << "|" << X.root << endl;
+    cout << "Y " << Y.nil << "|" << Y.root << endl;
+    cout << "Y " << Y.nil << "|" << Y.root->parent << endl;
+    cout << "Y " << Y.nil << "|" << Y.root->left->left->left->left << endl;
 }
