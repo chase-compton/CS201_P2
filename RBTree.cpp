@@ -83,7 +83,7 @@ public:
         {
             cout << "Copying" << endl;
             root = new Node<keyType, valueType>(*rhs.root);
-            nil = root->parent;
+            copyHelper(root);
         }
         else
         {
@@ -102,6 +102,18 @@ public:
         nil = rhs.nil;
         count = rhs.count;
         return *this;
+    }
+
+    void copyHelper(Node<keyType, valueType> *node)
+    {
+        if (node == nil)
+        {
+            return;
+        }
+        copyHelper(node->left);
+        node->left->parent = node;
+        node->right->parent = node;
+        copyHelper(node->right);
     }
 
     ~RBTree()
@@ -463,6 +475,7 @@ public:
                 r = r + y->parent->left->size + 1;
             }
             y = y->parent;
+            cout << y << "|" << root << endl;
         }
         return r;
     }
