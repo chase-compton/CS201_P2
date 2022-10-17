@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstdlib>
-#include <algorithm>
 #define black false
 #define red true
 using namespace std;

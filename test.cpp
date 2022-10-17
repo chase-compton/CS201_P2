@@ -6,6 +6,7 @@ int main()
 {
 
 	RBTree<int, int> X;
+	RBTree<int, int> Y;
 
 	for (int i = 1; i < 30; i++)
 	{
@@ -18,8 +19,7 @@ int main()
 			cout << "Search error" << endl;
 	}
 
-	RBTree<int, int> Y = X;
-
+	Y = X;
 
 	cout << "X " << X.nil << "|" << X.root << endl;
 	cout << "X " << X.nil << "|" << X.root->parent << endl;
