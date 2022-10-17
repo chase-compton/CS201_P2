@@ -83,8 +83,8 @@ public:
         if (rhs.root != rhs.nil)
         {
             nil = new Node<keyType, valueType>();
-            root = copyHelper(rhs.root);
-            root->parent = nil;
+            root = nil;
+            root = copyHelper(rhs.root, nil, nil);
         }
         else
         {
@@ -96,16 +96,36 @@ public:
 
     RBTree &operator=(const RBTree &rhs)
     {
-        // still needs checking
-        root = rhs.root;
-        nil = rhs.nil;
+        if (rhs.root != rhs.nil)
+        {
+            nil = new Node<keyType, valueType>();
+            root = nil;
+            root = copyHelper(rhs.root, nil, nil);
+        }
+        else
+        {
+            nil = new Node<keyType, valueType>();
+            root = nil;
+        }
         count = rhs.count;
         return *this;
     }
 
-    Node<keyType, valueType> *copyHelper(const Node<keyType, valueType> *node)
+    Node<keyType, valueType> *copyHelper(const Node<keyType, valueType> *rhs, Node<keyType, valueType> *newNil, Node<keyType, valueType> *p)
     {
-        //need to write
+        if (rhs->size == 0)
+        {
+            return newNil;
+        }
+        Node<keyType, valueType> *copy = new Node<keyType, valueType>();
+        copy->key = rhs->key;
+        copy->value = rhs->value;
+        copy->color = rhs->color;
+        copy->size = rhs->size;
+        copy->parent = p;
+        copy->left = copyHelper(rhs->left, newNil, copy);
+        copy->right = copyHelper(rhs->right, newNil, copy);
+        return copy;
     }
 
     ~RBTree()
