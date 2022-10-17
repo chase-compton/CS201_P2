@@ -22,6 +22,9 @@ int main()
 
 
 	cout << "X " << X.nil << "|" << X.root << endl;
+	cout << "X " << X.nil << "|" << X.root->parent << endl;
+    cout << "X " << X.nil << "|" << X.root->left->left->left->left << endl;
+    cout << "X " << X.nil << "|" << X.root->right->right->right->right->right->right->right << endl;
     cout << "Y " << Y.nil << "|" << Y.root << endl;
     cout << "Y " << Y.nil << "|" << Y.root->parent << endl;
     cout << "Y " << Y.nil << "|" << Y.root->left->left->left->left << endl;
@@ -82,138 +85,138 @@ int main()
 	cout << endl
 		 << "--------------------------" << endl;
 
-	X.remove(25);
-	X.preorder();
-	X.inorder();
-	X.printk(X.size());
-	for (int i = 1; i < 30; i++)
-	{
-		cout << X.select(i) << " ";
-	}
-	cout << endl
-		 << "--------------------------" << endl;
+	// X.remove(25);
+	// X.preorder();
+	// X.inorder();
+	// X.printk(X.size());
+	// for (int i = 1; i < 30; i++)
+	// {
+	// 	cout << X.select(i) << " ";
+	// }
+	// cout << endl
+	// 	 << "--------------------------" << endl;
 
-	Y.remove(25);
-	Y.preorder();
-	Y.inorder();
-	Y.printk(Y.size());
-	for (int i = 1; i < 30; i++)
-	{
-		cout << Y.select(i) << " ";
-	}
-	cout << endl
-		 << "--------------------------" << endl;
+	// Y.remove(25);
+	// Y.preorder();
+	// Y.inorder();
+	// Y.printk(Y.size());
+	// for (int i = 1; i < 30; i++)
+	// {
+	// 	cout << Y.select(i) << " ";
+	// }
+	// cout << endl
+	// 	 << "--------------------------" << endl;
 
-	X.remove(13);
-	X.preorder();
-	X.inorder();
-	X.printk(X.size());
-	for (int i = 1; i < 30; i++)
-	{
-		cout << X.select(i) << " ";
-	}
-	cout << endl
-		 << "--------------------------" << endl;
+	// X.remove(13);
+	// X.preorder();
+	// X.inorder();
+	// X.printk(X.size());
+	// for (int i = 1; i < 30; i++)
+	// {
+	// 	cout << X.select(i) << " ";
+	// }
+	// cout << endl
+	// 	 << "--------------------------" << endl;
 
-	Y.remove(13);
-	Y.preorder();
-	Y.inorder();
-	Y.printk(Y.size());
-	for (int i = 1; i < 30; i++)
-	{
-		cout << Y.select(i) << " ";
-	}
-	cout << endl
-		 << "--------------------------" << endl;
+	// Y.remove(13);
+	// Y.preorder();
+	// Y.inorder();
+	// Y.printk(Y.size());
+	// for (int i = 1; i < 30; i++)
+	// {
+	// 	cout << Y.select(i) << " ";
+	// }
+	// cout << endl
+	// 	 << "--------------------------" << endl;
 
-	X.remove(21);
-	X.preorder();
-	X.inorder();
-	X.printk(X.size());
-	for (int i = 1; i < 30; i++)
-	{
-		cout << X.select(i) << " ";
-	}
-	cout << endl
-		 << "--------------------------" << endl;
+	// X.remove(21);
+	// X.preorder();
+	// X.inorder();
+	// X.printk(X.size());
+	// for (int i = 1; i < 30; i++)
+	// {
+	// 	cout << X.select(i) << " ";
+	// }
+	// cout << endl
+	// 	 << "--------------------------" << endl;
 
-	Y.remove(21);
-	Y.preorder();
-	Y.inorder();
-	Y.printk(Y.size());
-	for (int i = 1; i < 30; i++)
-	{
-		cout << Y.select(i) << " ";
-	}
-	cout << endl
-		 << "--------------------------" << endl;
+	// Y.remove(21);
+	// Y.preorder();
+	// Y.inorder();
+	// Y.printk(Y.size());
+	// for (int i = 1; i < 30; i++)
+	// {
+	// 	cout << Y.select(i) << " ";
+	// }
+	// cout << endl
+	// 	 << "--------------------------" << endl;
 
-	X.remove(8);
-	X.preorder();
-	X.inorder();
-	X.printk(X.size());
-	for (int i = 1; i < 30; i++)
-	{
-		cout << X.select(i) << " ";
-	}
-	cout << endl
-		 << "--------------------------" << endl;
+	// X.remove(8);
+	// X.preorder();
+	// X.inorder();
+	// X.printk(X.size());
+	// for (int i = 1; i < 30; i++)
+	// {
+	// 	cout << X.select(i) << " ";
+	// }
+	// cout << endl
+	// 	 << "--------------------------" << endl;
 	
 
-	Y.remove(8);
-	Y.preorder();
-	Y.inorder();
-	Y.printk(Y.size());
-	for (int i = 1; i < 30; i++)
-	{
-		cout << Y.select(i) << " ";
-	}
-	cout << endl
-		 << "--------------------------" << endl;
+	// Y.remove(8);
+	// Y.preorder();
+	// Y.inorder();
+	// Y.printk(Y.size());
+	// for (int i = 1; i < 30; i++)
+	// {
+	// 	cout << Y.select(i) << " ";
+	// }
+	// cout << endl
+	// 	 << "--------------------------" << endl;
 
-	X.remove(16);
-	X.preorder();
-	X.inorder();
-	X.printk(X.size());
-	for (int i = 1; i < 30; i++)
-	{
-		cout << X.select(i) << " ";
-	}
-	cout << endl
-		 << "--------------------------" << endl;
+	// X.remove(16);
+	// X.preorder();
+	// X.inorder();
+	// X.printk(X.size());
+	// for (int i = 1; i < 30; i++)
+	// {
+	// 	cout << X.select(i) << " ";
+	// }
+	// cout << endl
+	// 	 << "--------------------------" << endl;
 
-	Y.remove(16);
-	Y.preorder();
-	Y.inorder();
-	Y.printk(Y.size());
-	for (int i = 1; i < 30; i++)
-	{
-		cout << Y.select(i) << " ";
-	}
-	cout << endl
-		 << "--------------------------" << endl;
+	// Y.remove(16);
+	// Y.preorder();
+	// Y.inorder();
+	// Y.printk(Y.size());
+	// for (int i = 1; i < 30; i++)
+	// {
+	// 	cout << Y.select(i) << " ";
+	// }
+	// cout << endl
+	// 	 << "--------------------------" << endl;
 
-	X.remove(20);
-	X.preorder();
-	X.inorder();
-	X.printk(X.size());
-	for (int i = 1; i < 30; i++)
-	{
-		cout << X.select(i) << " ";
-	}
-	cout << endl
-		 << "--------------------------" << endl;
+	// X.remove(20);
+	// X.preorder();
+	// X.inorder();
+	// X.printk(X.size());
+	// for (int i = 1; i < 30; i++)
+	// {
+	// 	cout << X.select(i) << " ";
+	// }
+	// cout << endl
+	// 	 << "--------------------------" << endl;
 
-	Y.remove(20);
-	Y.preorder();
-	Y.inorder();
-	Y.printk(Y.size());
-	for (int i = 1; i < 30; i++)
-	{
-		cout << Y.select(i) << " ";
-	}
-	cout << endl
-		 << "--------------------------" << endl;
+	// Y.remove(20);
+	// Y.preorder();
+	// Y.inorder();
+	// Y.printk(Y.size());
+	// for (int i = 1; i < 30; i++)
+	// {
+	// 	cout << Y.select(i) << " ";
+	// }
+	// cout << endl
+	// 	 << "--------------------------" << endl;
 
 
 	return 0;

@@ -45,8 +45,10 @@ public:
 
     ~Node()
     {
-        if (left->size != 0 ) delete left;
-        if (right->size != 0) delete right;
+        if (left->size != 0)
+            delete left;
+        if (right->size != 0)
+            delete right;
     }
 };
 
@@ -81,13 +83,12 @@ public:
         cout << "RBTree Copy" << endl;
         if (rhs.root != rhs.nil)
         {
-            cout << "Copying" << endl;
-            root = new Node<keyType, valueType>(*rhs.root);
-            copyHelper(root);
+            nil = new Node<keyType, valueType>();
+            root = copyHelper(rhs.root);
+            root->parent = nil;
         }
         else
         {
-            cout << "Empty" << endl;
             nil = new Node<keyType, valueType>();
             root = nil;
         }
@@ -96,7 +97,7 @@ public:
 
     RBTree &operator=(const RBTree &rhs)
     {
-        //still needs checking
+        // still needs checking
         cout << "RBTree =" << endl;
         root = rhs.root;
         nil = rhs.nil;
@@ -104,16 +105,9 @@ public:
         return *this;
     }
 
-    void copyHelper(Node<keyType, valueType> *node)
+    Node<keyType, valueType> *copyHelper(const Node<keyType, valueType> *node)
     {
-        if (node == nil)
-        {
-            return;
-        }
-        copyHelper(node->left);
-        node->left->parent = node;
-        node->right->parent = node;
-        copyHelper(node->right);
+        //need to write
     }
 
     ~RBTree()
@@ -302,7 +296,7 @@ public:
     int remove(keyType k)
     {
         Node<keyType, valueType> *z = nodeSearch(root, k);
-
+        cout << this << endl;
         if (z == nil)
         {
             return 0;
@@ -326,17 +320,20 @@ public:
         }
         else if (z->left == nil)
         {
+
             x = z->right;
             transplant(z, z->right);
         }
         else
         {
+
             y = maximum(z->left);
             y_original_color = y->color;
             x = y->left;
             cur = y;
             while (cur != z)
             {
+
                 cur = cur->parent;
                 cur->size--;
             }
@@ -388,9 +385,11 @@ public:
         {
             if (x == x->parent->left)
             {
+                cout << "a" << endl;
                 Node<keyType, valueType> *w = x->parent->right;
                 if (w->color == red)
                 {
+                    cout << "1" << endl;
                     w->color = black;
                     x->parent->color = red;
                     leftRotate(x->parent);
@@ -398,6 +397,7 @@ public:
                 }
                 if (w->left->color == black && w->right->color == black)
                 {
+                    cout << "2" << endl;
                     w->color = red;
                     x = x->parent;
                 }
@@ -405,11 +405,13 @@ public:
                 {
                     if (w->right->color == black)
                     {
+                        cout << "3" << endl;
                         w->left->color = black;
                         w->color = red;
                         rightRotate(w);
                         w = x->parent->right;
                     }
+                    cout << "4" << endl;
                     w->color = x->parent->color;
                     x->parent->color = black;
                     w->right->color = black;
@@ -419,9 +421,11 @@ public:
             }
             else
             {
+                cout << "b" << endl;
                 Node<keyType, valueType> *w = x->parent->left;
                 if (w->color == red)
                 {
+                    cout << "1" << endl;
                     w->color = black;
                     x->parent->color = red;
                     rightRotate(x->parent);
@@ -429,6 +433,8 @@ public:
                 }
                 if (w->right->color == black && w->left->color == black)
                 {
+                    cout << "2" << endl;
+
                     w->color = red;
                     x = x->parent;
                 }
@@ -436,11 +442,15 @@ public:
                 {
                     if (w->left->color == black)
                     {
+                        cout << "3" << endl;
+
                         w->right->color = black;
                         w->color = red;
                         leftRotate(w);
                         w = x->parent->left;
                     }
+                    cout << "4" << endl;
+
                     w->color = x->parent->color;
                     x->parent->color = black;
                     w->left->color = black;
@@ -448,6 +458,7 @@ public:
                     x = root;
                 }
             }
+            cout << x << "|" << root << endl;
         }
         x->color = black;
     }
@@ -467,7 +478,6 @@ public:
         int r = node->left->size + 1;
         Node<keyType, valueType> *y = node;
 
-
         while (y != root)
         {
             if (y == y->parent->right)
@@ -475,7 +485,6 @@ public:
                 r = r + y->parent->left->size + 1;
             }
             y = y->parent;
-            cout << y << "|" << root << endl;
         }
         return r;
     }
