@@ -80,7 +80,6 @@ public:
 
     RBTree(const RBTree &rhs)
     {
-        cout << "RBTree Copy" << endl;
         if (rhs.root != rhs.nil)
         {
             nil = new Node<keyType, valueType>();
@@ -98,7 +97,6 @@ public:
     RBTree &operator=(const RBTree &rhs)
     {
         // still needs checking
-        cout << "RBTree =" << endl;
         root = rhs.root;
         nil = rhs.nil;
         count = rhs.count;
@@ -296,7 +294,6 @@ public:
     int remove(keyType k)
     {
         Node<keyType, valueType> *z = nodeSearch(root, k);
-        cout << this << endl;
         if (z == nil)
         {
             return 0;
@@ -385,11 +382,9 @@ public:
         {
             if (x == x->parent->left)
             {
-                cout << "a" << endl;
                 Node<keyType, valueType> *w = x->parent->right;
                 if (w->color == red)
                 {
-                    cout << "1" << endl;
                     w->color = black;
                     x->parent->color = red;
                     leftRotate(x->parent);
@@ -397,7 +392,6 @@ public:
                 }
                 if (w->left->color == black && w->right->color == black)
                 {
-                    cout << "2" << endl;
                     w->color = red;
                     x = x->parent;
                 }
@@ -405,13 +399,11 @@ public:
                 {
                     if (w->right->color == black)
                     {
-                        cout << "3" << endl;
                         w->left->color = black;
                         w->color = red;
                         rightRotate(w);
                         w = x->parent->right;
                     }
-                    cout << "4" << endl;
                     w->color = x->parent->color;
                     x->parent->color = black;
                     w->right->color = black;
@@ -421,11 +413,9 @@ public:
             }
             else
             {
-                cout << "b" << endl;
                 Node<keyType, valueType> *w = x->parent->left;
                 if (w->color == red)
                 {
-                    cout << "1" << endl;
                     w->color = black;
                     x->parent->color = red;
                     rightRotate(x->parent);
@@ -433,7 +423,6 @@ public:
                 }
                 if (w->right->color == black && w->left->color == black)
                 {
-                    cout << "2" << endl;
 
                     w->color = red;
                     x = x->parent;
@@ -442,14 +431,12 @@ public:
                 {
                     if (w->left->color == black)
                     {
-                        cout << "3" << endl;
 
                         w->right->color = black;
                         w->color = red;
                         leftRotate(w);
                         w = x->parent->left;
                     }
-                    cout << "4" << endl;
 
                     w->color = x->parent->color;
                     x->parent->color = black;
@@ -458,7 +445,6 @@ public:
                     x = root;
                 }
             }
-            cout << x << "|" << root << endl;
         }
         x->color = black;
     }
@@ -554,7 +540,7 @@ public:
             node = y;
             y = y->parent;
         }
-        if (node == nil)
+        if (y == nil)
         {
             return NULL;
         }
@@ -583,7 +569,7 @@ public:
             y = y->parent;
         }
 
-        if (node == nil)
+        if (y == nil)
         {
             return NULL;
         }
