@@ -21,9 +21,9 @@ public:
 
     Node()
     {
-        left = nullptr;
-        right = nullptr;
-        parent = nullptr;
+        left = NULL;
+        right = NULL;
+        parent = NULL;
         color = black;
         size = 0;
     }
@@ -33,9 +33,9 @@ public:
         key = k;
         value = v;
 
-        left = nullptr;
-        right = nullptr;
-        parent = nullptr;
+        left = NULL;
+        right = NULL;
+        parent = NULL;
 
         color = red;
 
