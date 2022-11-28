@@ -4,6 +4,7 @@
 #define red true
 using namespace std;
 
+//Node Class
 template <class keyType, class valueType>
 class Node
 {
@@ -18,7 +19,7 @@ public:
     bool color;
 
     int size;
-
+    //Default Constructor
     Node()
     {
         left = nullptr;
@@ -28,6 +29,7 @@ public:
         size = 0;
     }
 
+    //Key and Value Constructor
     Node(keyType k, valueType v)
     {
         key = k;
@@ -51,6 +53,7 @@ public:
     }
 };
 
+
 template <class keyType, class valueType>
 class RBTree
 {
@@ -59,13 +62,13 @@ public:
     Node<keyType, valueType> *nil;
 
     int count = 0;
-
+    //Default Constructor
     RBTree()
     {
         nil = new Node<keyType, valueType>();
         root = nil;
     }
-
+    //Array Constructor
     RBTree(keyType k[], valueType v[], int s)
     {
         nil = new Node<keyType, valueType>();
@@ -76,7 +79,7 @@ public:
             insert(k[i], v[i]);
         }
     }
-
+    //Copy Constructor
     RBTree(const RBTree &rhs)
     {
         if (rhs.root != rhs.nil)
@@ -92,7 +95,7 @@ public:
         }
         count = rhs.count;
     }
-
+    //Assignment Op
     RBTree &operator=(const RBTree &rhs)
     {
         if (rhs.root != rhs.nil)
@@ -109,7 +112,7 @@ public:
         count = rhs.count;
         return *this;
     }
-
+    //Helper function that recursively copies the nodes
     Node<keyType, valueType> *copyHelper(const Node<keyType, valueType> *rhs, Node<keyType, valueType> *newNil, Node<keyType, valueType> *p)
     {
         if (rhs->size == 0)
@@ -126,12 +129,13 @@ public:
         copy->right = copyHelper(rhs->right, newNil, copy);
         return copy;
     }
-
+    //Destructors
     ~RBTree()
     {
         delete root;
     }
 
+    //search function that calls node search
     valueType *search(keyType k)
     {
         Node<keyType, valueType> *node = nodeSearch(root, k);
@@ -141,7 +145,7 @@ public:
         }
         return &(node->value);
     }
-
+    //node search which is used internally to make other functions easier. Done recursively
     Node<keyType, valueType> *nodeSearch(Node<keyType, valueType> *node, keyType k)
     {
         if (node == nil)
@@ -162,6 +166,7 @@ public:
         }
     }
 
+    //Insertion which follows normal Binary Tree insert but with fix up being called at the end
     void insert(keyType k, valueType v)
     {
         Node<keyType, valueType> *z = new Node<keyType, valueType>(k, v);
@@ -199,13 +204,16 @@ public:
         insertFixUp(z);
     }
 
+    //Fix up after insertion
     void insertFixUp(Node<keyType, valueType> *z)
     {
+        //loop in order to continue up the tree if needed
         while (z->parent->color == red)
         {
             if (z->parent == z->parent->parent->left)
             {
                 Node<keyType, valueType> *y = z->parent->parent->right;
+                //Case 1
                 if (y->color == red)
                 {
                     z->parent->color = black;
@@ -215,16 +223,19 @@ public:
                 }
                 else
                 {
+                    //Case 2
                     if (z == z->parent->right)
                     {
                         z = z->parent;
                         leftRotate(z);
                     }
+                    //Case 3
                     z->parent->color = black;
                     z->parent->parent->color = red;
                     rightRotate(z->parent->parent);
                 }
             }
+            //symetric code from above
             else
             {
                 Node<keyType, valueType> *y = z->parent->parent->left;
@@ -252,6 +263,7 @@ public:
         root->color = black;
     }
 
+    //Left rotate which is used in fix ups
     void leftRotate(Node<keyType, valueType> *x)
     {
         Node<keyType, valueType> *y = x->right;
@@ -280,7 +292,7 @@ public:
         y->size = x->size;
         x->size = x->right->size + x->left->size + 1;
     }
-
+    //Right rotate which is used in fix ups
     void rightRotate(Node<keyType, valueType> *x)
     {
         Node<keyType, valueType> *y = x->left;
@@ -310,18 +322,21 @@ public:
         x->size = x->right->size + x->left->size + 1;
     }
 
+    //Delete function
     int remove(keyType k)
     {
+        //searches for node
         Node<keyType, valueType> *z = nodeSearch(root, k);
         if (z == nil)
         {
             return 0;
         }
-
+        //if node exsists continue
         Node<keyType, valueType> *x = nil;
         Node<keyType, valueType> *y = z;
         bool y_original_color = y->color;
 
+        //decrements size in order to maintain ranks
         Node<keyType, valueType> *cur = y;
         while (cur->parent != nil)
         {
@@ -347,6 +362,7 @@ public:
             y_original_color = y->color;
             x = y->left;
             cur = y;
+            //loop to maintain sizes as well
             while (cur != z)
             {
 
@@ -377,7 +393,7 @@ public:
 
         return 1;
     }
-
+    //swap function
     void transplant(Node<keyType, valueType> *u, Node<keyType, valueType> *v)
     {
         if (u->parent == nil)
@@ -402,6 +418,7 @@ public:
             if (x == x->parent->left)
             {
                 Node<keyType, valueType> *w = x->parent->right;
+                //case 1
                 if (w->color == red)
                 {
                     w->color = black;
@@ -409,6 +426,7 @@ public:
                     leftRotate(x->parent);
                     w = x->parent->right;
                 }
+                //case 2
                 if (w->left->color == black && w->right->color == black)
                 {
                     w->color = red;
@@ -416,6 +434,7 @@ public:
                 }
                 else
                 {
+                    //case 3
                     if (w->right->color == black)
                     {
                         w->left->color = black;
@@ -423,6 +442,7 @@ public:
                         rightRotate(w);
                         w = x->parent->right;
                     }
+                    //case 4
                     w->color = x->parent->color;
                     x->parent->color = black;
                     w->right->color = black;
@@ -430,6 +450,7 @@ public:
                     x = root;
                 }
             }
+            //symteric code from above
             else
             {
                 Node<keyType, valueType> *w = x->parent->left;
@@ -470,19 +491,21 @@ public:
 
     int rank(keyType k)
     {
+        //finds the node with search
         Node<keyType, valueType> *node = nodeSearch(root, k);
         if (node == nil)
         {
             return 0;
         }
+        //uses rankhelper to find its rank
         return rankHelper(node);
     }
 
     int rankHelper(Node<keyType, valueType> *node)
     {
+        //finds where node would be in a in order traversal essentially
         int r = node->left->size + 1;
         Node<keyType, valueType> *y = node;
-
         while (y != root)
         {
             if (y == y->parent->right)
@@ -493,7 +516,7 @@ public:
         }
         return r;
     }
-
+    //selects node at pos
     keyType select(int pos)
     {
         if (pos <= 0 || pos > root->size)
@@ -502,7 +525,7 @@ public:
         }
         return selectHelper(root, pos);
     }
-
+    //uses root and pos inorder to find the node
     keyType selectHelper(Node<keyType, valueType> *node, int pos)
     {
         int r = node->left->size + 1;
@@ -518,6 +541,7 @@ public:
         return selectHelper(node->right, pos - r);
     }
 
+    //old function I thought would be useful but didn't use it 
     Node<keyType, valueType> *nodeSelect(Node<keyType, valueType> *node, int pos)
     {
         if (pos > root->size)
@@ -598,6 +622,7 @@ public:
 
     Node<keyType, valueType> *minimum(Node<keyType, valueType> *node)
     {
+        //finds left most node/min
         while (node->left != nil)
         {
             node = node->left;
@@ -607,6 +632,7 @@ public:
 
     Node<keyType, valueType> *maximum(Node<keyType, valueType> *node)
     {
+        //finds right most node/max
         while (node->right != nil)
         {
             node = node->right;
@@ -618,6 +644,8 @@ public:
     {
         return root->size;
     }
+
+    //all my print functions essentailly work the same way
 
     void preorder()
     {
@@ -664,6 +692,7 @@ public:
         cout << node->key << " ";
     }
 
+    //for print k, I keep a count of how many printed and stop when reached the count
     void printk(int k)
     {
         printkHelper(root, k);
